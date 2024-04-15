@@ -25,7 +25,7 @@ class SimulationState(Enum): # Enum for the simulation state
 def main():
     clock = pygame.time.Clock()
     simulation = Render()
-
+    print('Hemos llegado a main()')
     while True:
         for event in pygame.event.get(): # Event loop
             if event.type == pygame.QUIT:
