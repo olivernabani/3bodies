@@ -22,11 +22,6 @@ class SimulationState(Enum): # Enum for the simulation state
     EDIT = 2
     RUNNING = 3
 
-# def draw_text(surface, text, color, pos=(0, 0)):
-#     font = pygame.font.Font(None, 36)
-#     text_surface = font.render(text, True, color)
-#     surface.blit(text_surface, pos)
-
 def main():
     clock = pygame.time.Clock()
     simulation = Render()
