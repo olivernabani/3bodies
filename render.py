@@ -19,16 +19,17 @@ RED = (255, 50, 50)
 
 class Render:
     def __init__(self):
-        self.bodies = []
-        self.buttons = []
+        self.bodies = [] # List of CelestialBody objects
+        self.buttons = [] # List of Button objects
         self.state = 1  # SimulationState.CREATION
-        self.is_active = False
-        self.create_mode = False
-        self.delete_mode = False
-        self.drag_body = None
-        self.selected_body = None
-        self.zoom = 1
-        self.pan = [0, 0]
+        self.is_active = False # Flag to start/stop the simulation
+        self.create_mode = False # Flag to create a body
+        self.delete_mode = False # Flag to delete a body
+        self.drag_body = None # Reference to the body being dragged
+        self.selected_body = None # Reference to the body being edited
+        self.zoom = 1 # Zoom level
+        self.pan = [0, 0] # Pan position
+        self.temporal_pos = [0, 0]
         self.elapsed_time = 0
         self.create_buttons()
         self.img_create = pygame.image.load('create.png')
@@ -36,15 +37,15 @@ class Render:
         self.font = pygame.font.SysFont('Arial', 25)
         self.font2 = pygame.font.Font(None, 74)
 
-    def create_buttons(self):
+    def create_buttons(self): # Definition of the buttons
         self.create_button = Button(0, 0, 100, 40, "Create")
         self.delete_button = Button(100, 0, 100, 40, "Delete")
         self.demo_button = Button(200, 0, 100, 40, "Demo")
         self.edit_button = Button(300, 0, 100, 40, "Edit")
         self.run_button = Button(400, 0, 100, 40, "Run")
-        self.start_stop_button = Button(0, 0, 150, 40, "Start/Stop")
+        self.start_stop_button = Button(0, 0, 100, 40, "Start/Stop")
         self.reset_button = Button(150, 0, 100, 40, "Reset")
-        self.back_button = Button(250, 0, 100, 40, "Back")
+        self.back_button = Button(0, 40, 100, 40, "<-Back")
         self.buttons = [
             self.create_button,
             self.delete_button,
@@ -114,7 +115,7 @@ class Render:
         self.pan[0] += rel[0]
         self.pan[1] += rel[1]
 
-    def draw_text(surface, text, color, pos=(0, 0)):
+    def draw_text(self,surface, text, color, pos=(0, 0)):
         font = pygame.font.Font(None, 36)
         text_surface = font.render(text, True, color)
         surface.blit(text_surface, pos)
@@ -123,7 +124,7 @@ class Render:
         pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
             if self.create_button.is_over(pos):
-                self.create_body(pos)
+                self.create_mode = True
             elif self.delete_button.is_over(pos):
                 self.delete_mode = True
             elif self.demo_button.is_over(pos):
@@ -133,6 +134,9 @@ class Render:
             elif self.run_button.is_over(pos):
                 self.state = 3  # SimulationState.RUNNING
             else:
+                if self.create_body:
+                    self.create_body(pos)
+                    self.create_mode = False
                 for body in self.bodies:
                     if body.is_over(pos):
                         self.drag_body = body
@@ -148,12 +152,12 @@ class Render:
         for button in self.create_buttons:
             button.draw(screen)
         for body in self.bodies:
-            body.draw(screen)
+            body.draw(screen,1,0,0,0,False)
         screen.blit(self.img_create, (0, HEIGHT - 100))
-        if self.create_mode:
-            self.draw_text(screen, "Click where you want to create a body", WHITE)
+        if self.create_mode:    
+            self.draw_text(screen, "Click where you want to create a body", WHITE, (0, 920))
         elif self.delete_mode:
-            self.draw_text(screen, "Click on the body to delete", WHITE)
+            self.draw_text(screen, "Click on the body to delete", WHITE, (0, 40))
 
     def handle_edit_events(self, event):
         pos = pygame.mouse.get_pos()
