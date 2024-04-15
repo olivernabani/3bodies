@@ -26,6 +26,7 @@ class Render:
         self.create_mode = False # Flag to create a body
         self.delete_mode = False # Flag to delete a body
         self.drag_body = None # Reference to the body being dragged
+        self.dragging = False # Flag to indicate if a body is being dragged
         self.selected_body = None # Reference to the body being edited
         self.zoom = 1 # Zoom level
         self.pan = [0, 0] # Pan position
@@ -120,6 +121,9 @@ class Render:
         text_surface = font.render(text, True, color)
         surface.blit(text_surface, pos)
     
+    
+    # The following methods handle the events and render the different states of the simulation
+    # Creation Menu
     def handle_creation_events(self, event):
         pos = pygame.mouse.get_pos()
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -131,33 +135,39 @@ class Render:
                 self.load_demo()
             elif self.edit_button.is_over(pos):
                 self.state = 2  # SimulationState.EDIT
-            elif self.run_button.is_over(pos):
-                self.state = 3  # SimulationState.RUNNING
             else:
-                if self.create_body:
+                if self.create_body and self.create_mode:
                     self.create_body(pos)
                     self.create_mode = False
+                elif self.delete_mode:
+                    self.delete_body(pos)
+                    self.delete_mode = False
                 for body in self.bodies:
                     if body.is_over(pos):
                         self.drag_body = body
-                        break
+                        print(body.name)
+                        self.dragging = True
+                        # break
         elif event.type == pygame.MOUSEBUTTONUP:
             self.drag_body = None
-            self.delete_mode = False
+            self.dragging = False
+            # self.delete_mode = False        
+        
         elif event.type == pygame.MOUSEMOTION:
-            if self.drag_body:
-                self.drag_body.move_to(event.pos)
+            if self.drag_body and self.dragging:
+                self.drag_body.x = pos[0]
+                self.drag_body.y = pos[1]
 
-    def render_creation_menu(self, screen):
+    def render_creation_menu(self, screen):        
         for button in self.create_buttons:
             button.draw(screen)
         for body in self.bodies:
             body.draw(screen,1,0,0,0,False)
         screen.blit(self.img_create, (0, HEIGHT - 100))
         if self.create_mode:    
-            self.draw_text(screen, "Click where you want to create a body", WHITE, (0, 920))
+            self.draw_text(screen, "Click where you want to create a body", WHITE, (40, 920))
         elif self.delete_mode:
-            self.draw_text(screen, "Click on the body to delete", WHITE, (0, 40))
+            self.draw_text(screen, "Click on the body to delete", WHITE, (40, 920))
 
     def handle_edit_events(self, event):
         pos = pygame.mouse.get_pos()
