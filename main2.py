@@ -5,7 +5,7 @@ from enum import Enum
 
 # Initialize Pygame
 pygame.init()
-
+print('Añadido en GItHub')
 # Screen settings and colors
 WIDTH, HEIGHT = 1920, 1080
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
