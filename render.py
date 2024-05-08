@@ -220,12 +220,13 @@ class Render:
     def render_creation_menu(self, screen):        
         for button in self.creation_buttons:
             button.draw(screen)
-        if self.give_color:
-            for button in self.color_buttons:
-                button.draw(screen)
+        
         
         for body in self.bodies:
             body.draw(screen,1,0,0,0,False)
+        if self.give_color:
+            for button in self.color_buttons:
+                button.draw(screen)
         screen.blit(self.img_create, (0, HEIGHT - 100))
         if self.create_mode:    
             self.draw_text(screen, "Click where you want to create a body", WHITE, (40, 920))
