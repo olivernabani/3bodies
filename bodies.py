@@ -1,5 +1,4 @@
 import pygame
-import config
 
 # Clase para representar los cuerpos celestes
 class CelestialBody:
