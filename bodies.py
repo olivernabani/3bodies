@@ -32,11 +32,12 @@ class CelestialBody:
             puntoy = int(point[1]* zoom + (config.HEIGHT/2)*(1-zoom) + diffy)
             pygame.draw.circle(screen, self.color, (puntox, puntoy), 1)
             
-        pygame.draw.aaline(screen, config.WHITE, (myx,myy),(myx+(self.vx*50),myy +(self.vy*50)))
+        pygame.draw.aaline(screen, config.WHITE, (myx,myy),(myx+(self.vx*200),myy +(self.vy*200)))
 
         if tag:
             font = pygame.font.SysFont('Arial', 15)
-            text = font.render(str(self.mass),True, config.WHITE)
+            formatted_mass = "{:.2f}".format(self.mass)
+            text = font.render(formatted_mass,True, config.WHITE)
             screen.blit(text,(self.x -50, self.y -50))
         
     def update_position(self):

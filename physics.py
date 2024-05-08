@@ -1,4 +1,4 @@
-from math import sqrt, pow
+from math import sqrt
 import random
 
 class Physics:
