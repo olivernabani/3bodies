@@ -12,6 +12,9 @@ class CelestialBody:
         self.vx = 0
         self.vy = 0
         self.trail = []
+        self.WIDTH = 1920
+        self.HEIGHT = 1080
+        self.WHITE = (255, 255, 255)
     
     def is_over(self, pos):        
         if self.x - self.radius < pos[0] < self.x + self.radius and self.y - self.radius < pos[1] < self.y + self.radius:
@@ -21,22 +24,22 @@ class CelestialBody:
             return False
 
     def draw(self, screen, zoom, diffx, diffy, width, tag):
-        myx = int(self.x * zoom + (config.WIDTH/2)*(1-zoom) + diffx)
-        myy = int(self.y * zoom + (config.HEIGHT/2)*(1-zoom) + diffy)
+        myx = int(self.x * zoom + (self.WIDTH/2)*(1-zoom) + diffx)
+        myy = int(self.y * zoom + (self.HEIGHT/2)*(1-zoom) + diffy)
         myradius = int(self.radius * zoom)
         
         pygame.draw.circle(screen, self.color, (myx, myy), myradius, width)
         for point in self.trail:
-            puntox = int(point[0]* zoom + (config.WIDTH/2)*(1-zoom) + diffx)
-            puntoy = int(point[1]* zoom + (config.HEIGHT/2)*(1-zoom) + diffy)
+            puntox = int(point[0]* zoom + (self.WIDTH/2)*(1-zoom) + diffx)
+            puntoy = int(point[1]* zoom + (self.HEIGHT/2)*(1-zoom) + diffy)
             pygame.draw.circle(screen, self.color, (puntox, puntoy), 1)
             
-        pygame.draw.aaline(screen, config.WHITE, (myx,myy),(myx+(self.vx*200),myy +(self.vy*200)))
+        pygame.draw.aaline(screen, self.WHITE, (myx,myy),(myx+(self.vx*200),myy +(self.vy*200)))
 
         if tag:
             font = pygame.font.SysFont('Arial', 15)
             formatted_mass = "{:.2f}".format(self.mass)
-            text = font.render(formatted_mass,True, config.WHITE)
+            text = font.render(formatted_mass,True, self.WHITE)
             screen.blit(text,(self.x -50, self.y -50))
         
     def update_position(self):
